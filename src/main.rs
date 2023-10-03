@@ -214,7 +214,7 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
     }
 }
 
-fn help(nm: &String) {
+fn help(nm: &str) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
     println!("    -S    Display seconds");
@@ -234,7 +234,7 @@ fn help(nm: &String) {
 
 fn draw<W: Write>(
     hour: Vec<[[bool; 6]; 5]>,
-    sym: String,
+    sym: &str,
     mut pos_x: u16,
     pos_y: u16,
     fg_color: u8,
@@ -276,8 +276,8 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     /* Set default values */
     let mut debug = false; // Debug mode
-    let nm = String::from(&args[0].to_string());
-    let mut sym = String::from("█"); // Symbol
+    let nm = &args[0];
+    let mut sym = "█"; // Symbol
     let mut fg_color = 1; // Fg color
     let mut bg_color = 1; // Fg color
     let mut center_clock = false; // Center clock (Default: no)
@@ -302,7 +302,7 @@ fn main() {
             // fg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -f");
-                help(&nm);
+                help(nm);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
                 let num = ch.parse::<u8>();
@@ -310,7 +310,7 @@ fn main() {
                     Ok(val) => fg_color = val,
                     Err(e) => {
                         println!("Invalid option for -f: {}", e);
-                        help(&nm);
+                        help(nm);
                     }
                 }
             }
@@ -319,7 +319,7 @@ fn main() {
             // bg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -b");
-                help(&nm);
+                help(nm);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
                 let num = ch.parse::<u8>();
@@ -327,7 +327,7 @@ fn main() {
                     Ok(val) => bg_color = val,
                     Err(e) => {
                         println!("Invalid option for -b: {}", e);
-                        help(&nm);
+                        help(nm);
                     }
                 }
             }
@@ -338,16 +338,15 @@ fn main() {
         }
         if args[i] == *"-h" {
             // Help
-            help(&nm);
+            help(nm);
         }
         if args[i] == *"-s" {
             // Custom symbol
             if args.len() <= i + 1 {
                 println!("Invalid option for -s");
-                help(&nm);
+                help(nm);
             } else {
-                let ch = args.get(i + 1).unwrap();
-                sym = String::from(&ch.to_string());
+                sym = &args[i + 1];
             }
         }
         if args[i] == *"-S" {
@@ -446,7 +445,7 @@ fn main() {
         }
 
         /* Draw time and print date */
-        draw(hour, sym.clone(), x, y, fg_color, bg_color, &mut stdout);
+        draw(hour, sym, x, y, fg_color, bg_color, &mut stdout);
 
         if !time_only && !date_only {
             write!(
