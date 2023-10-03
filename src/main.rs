@@ -170,8 +170,6 @@ use std::env;
 
 use std::process;
 
-/* Functions */
-
 fn resize_watcher<W: Write>(size: (u16, u16), stdout: &mut RawTerminal<W>) -> bool {
     if size != termion::terminal_size().unwrap() {
         write!(stdout, "{}", clear::All).unwrap();
@@ -272,16 +270,14 @@ fn draw<W: Write>(
     }
 }
 
-/* Main */
-
 fn main() {
     let args: Vec<String> = env::args().collect();
     /* Set default values */
-    let mut debug = false; // Debug mode
+    let mut debug = false;
     let nm = &args[0];
     let mut sym = "█"; // Symbol
-    let mut fg_color = 1; // Fg color
-    let mut bg_color = 1; // Fg color
+    let mut fg_color = 1;
+    let mut bg_color = 1;
     let mut center_clock = false; // Center clock (Default: no)
     let mut seconds = false; // Display seconds (Default: no)
     let mut time_only = false;
@@ -299,8 +295,8 @@ fn main() {
 
     /* Args parsing */
     for i in 1..args.len() {
+        // fg_color
         if args[i] == *"-f" {
-            // fg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -f");
                 help(nm, 1);
@@ -316,8 +312,8 @@ fn main() {
                 }
             }
         }
+        // bg_color
         if args[i] == *"-b" {
-            // bg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -b");
                 help(nm, 1);
@@ -354,7 +350,6 @@ fn main() {
             seconds = true;
         }
         if args[i] == *"-v" {
-            // Priny rsClock version
             println!("rsClock {}", VERSION);
             process::exit(0);
         }
@@ -379,7 +374,6 @@ fn main() {
     }
 
     /* Setting format */
-
     let clock = match (twelve_hour_block, twelve_hour_line, seconds) {
         (false, false, false) => "%H:%M",
         (false, false, true) => "%H:%M:%S",
@@ -393,7 +387,6 @@ fn main() {
 
     let date = if twelve_hour_line { "%F %p" } else { "%F" };
 
-    /* Setting refresh value */
     let refresh = Duration::from_millis(100);
 
     /* Prepare stdout and stdin */
@@ -423,8 +416,8 @@ fn main() {
             .unwrap();
         }
 
-        let time = Local::now().format(clock).to_string(); // get time
-        let d_date = Local::now().format(date).to_string(); // get date
+        let time = Local::now().format(clock).to_string();
+        let d_date = Local::now().format(date).to_string();
 
         let hour: Vec<_> = if date_only { &d_date } else { &time }
             .chars()
@@ -467,7 +460,6 @@ fn main() {
             if let Some(Ok(b)) = ev {
                 match b {
                     b'q' => {
-                        // Exit
                         exit = 1;
                         break;
                     }
@@ -510,7 +502,7 @@ fn main() {
                 size = termion::terminal_size().unwrap();
                 break; // -> Re-draw
             }
-            thread::sleep(refresh); // Sleep
+            thread::sleep(refresh);
         }
 
         if exit == 1 {
