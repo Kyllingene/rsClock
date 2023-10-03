@@ -214,7 +214,7 @@ fn symbol(ch: char) -> [[bool; 6]; 5] {
     }
 }
 
-fn help(nm: &str) {
+fn help(nm: &str, code: i32) {
     println!("usage : {}", nm);
     println!("    -s    Set custom symbol");
     println!("    -S    Display seconds");
@@ -229,7 +229,7 @@ fn help(nm: &str) {
     println!("    -v    Show rsClock version");
     println!("    -h    Display this message");
     println!("    -o    Print once, then exit");
-    process::exit(1);
+    process::exit(code);
 }
 
 fn draw<W: Write>(
@@ -302,7 +302,7 @@ fn main() {
             // fg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -f");
-                help(nm);
+                help(nm, 1);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
                 let num = ch.parse::<u8>();
@@ -310,7 +310,7 @@ fn main() {
                     Ok(val) => fg_color = val,
                     Err(e) => {
                         println!("Invalid option for -f: {}", e);
-                        help(nm);
+                        help(nm, 1);
                     }
                 }
             }
@@ -319,7 +319,7 @@ fn main() {
             // bg_color
             if args.len() <= i + 1 {
                 println!("Invalid option for -b");
-                help(nm);
+                help(nm, 1);
             } else {
                 let ch = String::from(&args.get(i + 1).unwrap().to_string());
                 let num = ch.parse::<u8>();
@@ -327,7 +327,7 @@ fn main() {
                     Ok(val) => bg_color = val,
                     Err(e) => {
                         println!("Invalid option for -b: {}", e);
-                        help(nm);
+                        help(nm, 1);
                     }
                 }
             }
@@ -338,13 +338,13 @@ fn main() {
         }
         if args[i] == *"-h" {
             // Help
-            help(nm);
+            help(nm, 0);
         }
         if args[i] == *"-s" {
             // Custom symbol
             if args.len() <= i + 1 {
                 println!("Invalid option for -s");
-                help(nm);
+                help(nm, 1);
             } else {
                 sym = &args[i + 1];
             }
@@ -356,7 +356,7 @@ fn main() {
         if args[i] == *"-v" {
             // Priny rsClock version
             println!("rsClock {}", VERSION);
-            process::exit(1);
+            process::exit(0);
         }
         if args[i] == *"-c" {
             center_clock = true;
