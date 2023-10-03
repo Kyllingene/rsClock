@@ -15,7 +15,9 @@
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-const ONE: [[bool; 6]; 5] = [
+type Symbol = [[bool; 6]; 5];
+
+const ONE: Symbol = [
     [false, false, true, true, false, false],
     [false, false, true, true, false, false],
     [false, false, true, true, false, false],
@@ -23,7 +25,7 @@ const ONE: [[bool; 6]; 5] = [
     [false, false, true, true, false, false],
 ];
 
-const TWO: [[bool; 6]; 5] = [
+const TWO: Symbol = [
     [true, true, true, true, true, true],
     [false, false, false, false, true, true],
     [true, true, true, true, true, true],
@@ -31,7 +33,7 @@ const TWO: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const THREE: [[bool; 6]; 5] = [
+const THREE: Symbol = [
     [true, true, true, true, true, true],
     [false, false, false, false, true, true],
     [true, true, true, true, true, true],
@@ -39,7 +41,7 @@ const THREE: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const FOUR: [[bool; 6]; 5] = [
+const FOUR: Symbol = [
     [true, true, false, false, true, true],
     [true, true, false, false, true, true],
     [true, true, true, true, true, true],
@@ -47,7 +49,7 @@ const FOUR: [[bool; 6]; 5] = [
     [false, false, false, false, true, true],
 ];
 
-const FIVE: [[bool; 6]; 5] = [
+const FIVE: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, false, false],
     [true, true, true, true, true, true],
@@ -55,7 +57,7 @@ const FIVE: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const SIX: [[bool; 6]; 5] = [
+const SIX: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, false, false],
     [true, true, true, true, true, true],
@@ -63,7 +65,7 @@ const SIX: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const SEVEN: [[bool; 6]; 5] = [
+const SEVEN: Symbol = [
     [true, true, true, true, true, true],
     [false, false, false, false, true, true],
     [false, false, false, false, true, true],
@@ -71,7 +73,7 @@ const SEVEN: [[bool; 6]; 5] = [
     [false, false, false, false, true, true],
 ];
 
-const EIGHT: [[bool; 6]; 5] = [
+const EIGHT: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, true, true],
     [true, true, true, true, true, true],
@@ -79,7 +81,7 @@ const EIGHT: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const NINE: [[bool; 6]; 5] = [
+const NINE: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, true, true],
     [true, true, true, true, true, true],
@@ -87,7 +89,7 @@ const NINE: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const ZERO: [[bool; 6]; 5] = [
+const ZERO: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, true, true],
     [true, true, false, false, true, true],
@@ -95,7 +97,7 @@ const ZERO: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const DIV: [[bool; 6]; 5] = [
+const DIV: Symbol = [
     [false, false, false, false, false, false],
     [false, false, true, true, false, false],
     [false, false, false, false, false, false],
@@ -103,7 +105,7 @@ const DIV: [[bool; 6]; 5] = [
     [false, false, false, false, false, false],
 ];
 
-const DASH: [[bool; 6]; 5] = [
+const DASH: Symbol = [
     [false, false, false, false, false, false],
     [false, false, false, false, false, false],
     [false, true, true, true, true, false],
@@ -111,7 +113,7 @@ const DASH: [[bool; 6]; 5] = [
     [false, false, false, false, false, false],
 ];
 
-const ERR: [[bool; 6]; 5] = [
+const ERR: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, false, false],
     [true, true, true, true, true, true],
@@ -119,7 +121,7 @@ const ERR: [[bool; 6]; 5] = [
     [true, true, true, true, true, true],
 ];
 
-const SPACE: [[bool; 6]; 5] = [
+const SPACE: Symbol = [
     [false, false, false, false, false, false],
     [false, false, false, false, false, false],
     [false, false, false, false, false, false],
@@ -127,7 +129,7 @@ const SPACE: [[bool; 6]; 5] = [
     [false, false, false, false, false, false],
 ];
 
-const A: [[bool; 6]; 5] = [
+const A: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, true, true],
     [true, true, true, true, true, true],
@@ -135,7 +137,7 @@ const A: [[bool; 6]; 5] = [
     [true, true, false, false, true, true],
 ];
 
-const P: [[bool; 6]; 5] = [
+const P: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, false, true, true],
     [true, true, true, true, true, true],
@@ -143,7 +145,7 @@ const P: [[bool; 6]; 5] = [
     [true, true, false, false, false, false],
 ];
 
-const M: [[bool; 6]; 5] = [
+const M: Symbol = [
     [true, true, true, true, true, true],
     [true, true, false, true, false, true],
     [true, true, false, true, false, true],
@@ -192,7 +194,7 @@ fn center(x_mod: u16, y_mod: u16, x_size: u16, y_size: u16) -> (u16, u16) {
     (x, y)
 }
 
-fn symbol(ch: char) -> [[bool; 6]; 5] {
+fn symbol(ch: char) -> Symbol {
     match ch {
         '1' => ONE,
         '2' => TWO,
@@ -233,7 +235,7 @@ fn help(nm: &str, code: i32) {
 }
 
 fn draw<W: Write>(
-    hour: &[[[bool; 6]; 5]],
+    hour: &[Symbol],
     sym: &str,
     mut pos_x: u16,
     pos_y: u16,
