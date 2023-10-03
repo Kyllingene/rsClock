@@ -233,7 +233,7 @@ fn help(nm: &str, code: i32) {
 }
 
 fn draw<W: Write>(
-    hour: Vec<[[bool; 6]; 5]>,
+    hour: &[[[bool; 6]; 5]],
     sym: &str,
     mut pos_x: u16,
     pos_y: u16,
@@ -293,7 +293,6 @@ fn main() {
     let y_mod = 1;
 
     /* Default date size */
-    let mut x_size = 34;
     let y_size = 7;
 
     /* Args parsing */
@@ -321,8 +320,7 @@ fn main() {
                 println!("Invalid option for -b");
                 help(nm, 1);
             } else {
-                let ch = String::from(&args.get(i + 1).unwrap().to_string());
-                let num = ch.parse::<u8>();
+                let num = args[i + 1].parse::<u8>();
                 match num {
                     Ok(val) => bg_color = val,
                     Err(e) => {
@@ -379,24 +377,19 @@ fn main() {
     }
 
     /* Setting format */
-    let mut format = if twelve_hour_block || twelve_hour_line {
-        "%I:%M".to_string()
-    } else {
-        "%H:%M".to_string()
+
+    let clock = match (twelve_hour_block, twelve_hour_line, seconds) {
+        (false, false, false) => "%H:%M",
+        (false, false, true) => "%H:%M:%S",
+        (false, true, false) => "%I:%M",
+        (false, true, true) => "%I:%M:%S",
+        (true, _, false) => "%I:%M %p",
+        (true, _, true) => "%I:%M:%S %p",
     };
 
-    if seconds {
-        format += ":%S";
-        x_size += 21;
-    }
+    let x_size = (clock.len() - 1) as u16 * 7 + 6;
 
-    if twelve_hour_block {
-        format += " %p";
-        x_size += 21;
-    }
-
-    let clock: &str = format.as_str();
-    let date: &str = if twelve_hour_line { "%F %p" } else { "%F" };
+    let date = if twelve_hour_line { "%F %p" } else { "%F" };
 
     /* Setting refresh value */
     let refresh = Duration::from_millis(100);
@@ -410,9 +403,7 @@ fn main() {
     let mut y = 2;
 
     if center_clock {
-        let pos = center(x_mod, y_mod, x_size, y_size);
-        x = pos.0;
-        y = pos.1;
+        (x, y) = center(x_mod, y_mod, x_size, y_size);
     }
 
     write!(stdout, "\n{}{}\n", cursor::Hide, clear::All).unwrap();
@@ -432,20 +423,14 @@ fn main() {
 
         let time = Local::now().format(clock).to_string(); // get time
         let d_date = Local::now().format(date).to_string(); // get date
-        let mut hour: Vec<[[bool; 6]; 5]> = Vec::new();
 
-        if !date_only {
-            for c in time.chars() {
-                hour.push(symbol(c));
-            }
-        } else {
-            for c in d_date.chars() {
-                hour.push(symbol(c));
-            }
-        }
+        let hour: Vec<_> = if date_only { &d_date } else { &time }
+            .chars()
+            .map(symbol)
+            .collect();
 
         /* Draw time and print date */
-        draw(hour, sym, x, y, fg_color, bg_color, &mut stdout);
+        draw(&hour, sym, x, y, fg_color, bg_color, &mut stdout);
 
         if !time_only && !date_only {
             write!(
